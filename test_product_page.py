@@ -4,6 +4,39 @@ from .pages.basket_page import BasketPage
 import time
 import pytest
 
+@pytest.mark.login_guest
+class TestUserAddToBasketFromProductPage(): 
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/ru/accounts/login/"
+        self.login_page = LoginPage(browser, link)
+        self.login_page.open()
+        email = str(time.time()) + "@fakemail.org"
+        password = str(time.time())
+        time.sleep(2)
+        self.login_page.register_new_user(email, password)
+        time.sleep(2)
+        self.login_page.should_be_authorized_user() 
+        time.sleep(2)
+		
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/ru/catalogue/coders-at-work_207/"
+        self.product_page = PageObject(browser, link)
+        self.product_page.open()
+        self.product_page.add_to_basket()
+        self.product_page.should_be_book_name()
+        self.product_page.should_be_book_price()
+        time.sleep(2)
+	
+    def test_user_cant_see_success_message_after_adding_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        self.product_page = PageObject(browser, link)
+        self.product_page.open()
+        #self.product_page.add_to_basket()
+        self.product_page.should_not_be_success_message()
+        time.sleep(2)
+
+		
 def test_guest_can_add_product_to_basket(browser):
     link = "http://selenium1py.pythonanywhere.com/ru/catalogue/coders-at-work_207/?promo=newYear2019"
     product_page = PageObject(browser, link)
