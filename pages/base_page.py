@@ -5,8 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from .locators import BasePageLocators
 from .locators import BasketPageLocators
-
-
 import math
 
 class BasePage():
